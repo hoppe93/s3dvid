@@ -11,16 +11,6 @@
 #include "s3d.h"
 #include "s3dpng.h"
 
-#define FPS 24
-#define VIDEOLENGTH 5
-#define PIXELSI 100
-#define PIXELSJ 100
-#define VISANG 0.8
-#define LOCATION {0.0,-1.069,0.0}
-#define DIRECTION {0.4,0.5,0.0}
-#define ROTATEAXIS {0,0,1}
-#define OUTNAME "frames/frame"
-
 #define PI (3.14159265359)
 
 struct settings {
@@ -170,6 +160,26 @@ void find_max_intensity(s3d_t *s, struct settings *set) {
 	set_png_threshold(mx);
 }
 
+void write_img(double **img, size_t height, size_t width, char *name) {
+	size_t i, j;
+	FILE *f;
+
+	f = fopen(name, "w");
+	if (!f) {
+		perror("ERROR");
+		exit(EXIT_FAILURE);
+	}
+
+	for (i = 0; i < height; i++) {
+		for (j = 0; j < width; j++) {
+			fprintf(f, "%e  ", img[i][j]);
+		}
+		putc('\n', f);
+	}
+
+	fclose(f);
+}
+
 void generate_frames(
 	s3d_t *s, double *angles, size_t *anglecount, double **anglestart,
 	double dangle, struct settings *set, double centerpoint[3]
@@ -179,6 +189,7 @@ void generate_frames(
 	double avg = 0.0;
 	double loc[3], dir[3];
 	char *outname = malloc(sizeof(char)*mlen);
+		 //*outnamed = malloc(sizeof(char)*mlen);
 
 	/* Compute filename offset */
 	for (j = 0; j < (size_t)tn; j++)
@@ -203,7 +214,9 @@ void generate_frames(
 		avg += toc();
 
 		snprintf(outname, mlen, "%s%zu.png", set->outfile, offset+j);
+		//snprintf(outnamed, mlen, "%s%zu.dat", set->outfile, offset+j);
 		saveimg(img, set->height, set->width, outname);
+		//write_img(img, set->height, set->width, outnamed);
 	}
 
 	printf("Average time per frame on thread #%d: %.3fms\n", tn, avg*1e3/((double)anglecount[tn]));
@@ -246,12 +259,13 @@ int main(int argc, char *argv[]) {
 
 	s3d_center(s, centerpoint);
 
-	angles = malloc(sizeof(double)*set->fps);
+	size_t frames = set->fps * set->videolength;
+	angles = malloc(sizeof(double)*frames);
 	anglecount = malloc(sizeof(size_t)*threads);
 	anglestart = malloc(sizeof(double*)*threads);
-	dangle = 2.0*PI / (double)(set->fps-1);
+	dangle = 2.0*PI / (double)(frames-1);
 
-	divide_among_threads(set->fps, dangle, threads, angles, anglestart, anglecount);
+	divide_among_threads(frames, dangle, threads, angles, anglestart, anglecount);
 
 	camera_init(set->height, set->width, set->visang);
 

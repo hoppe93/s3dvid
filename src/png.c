@@ -45,11 +45,17 @@ bitmap_t *img2bitmap(double **img, size_t width, size_t height) {
 		for (j = 0; j < (long long signed int)height; j++, index++) {
 			gmi = (img[i][j]/bitmap_threshold * (GERIMAP_COLORS-1));
 			gmil = floor(gmi);
-			gmif = gmi - (double)gmil;
+			if (gmil >= GERIMAP_COLORS-1) {
+				bmp->pixels[index].red   = GERIMAP[GERIMAP_COLORS-1][0];
+				bmp->pixels[index].green = GERIMAP[GERIMAP_COLORS-1][1];
+				bmp->pixels[index].blue  = GERIMAP[GERIMAP_COLORS-1][2];
+			} else {
+				gmif = gmi - (double)gmil;
 
-			bmp->pixels[index].red   = GERIMAP[gmil][0]+(GERIMAP[gmil+1][0]-GERIMAP[gmil][0])*gmif;
-			bmp->pixels[index].green = GERIMAP[gmil][1]+(GERIMAP[gmil+1][1]-GERIMAP[gmil][1])*gmif;
-			bmp->pixels[index].blue  = GERIMAP[gmil][2]+(GERIMAP[gmil+1][2]-GERIMAP[gmil][2])*gmif;
+				bmp->pixels[index].red   = GERIMAP[gmil][0]+(GERIMAP[gmil+1][0]-GERIMAP[gmil][0])*gmif;
+				bmp->pixels[index].green = GERIMAP[gmil][1]+(GERIMAP[gmil+1][1]-GERIMAP[gmil][1])*gmif;
+				bmp->pixels[index].blue  = GERIMAP[gmil][2]+(GERIMAP[gmil+1][2]-GERIMAP[gmil][2])*gmif;
+			}
 		}
 	}
 
