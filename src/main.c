@@ -20,6 +20,7 @@ struct settings {
 	double location[3], direction[3];
 	double rotate_axis[3];
 	char *infile, *outfile;
+	int draw_bounds;
 };
 
 struct timespec ticclock;
@@ -45,6 +46,7 @@ struct settings *read_settings(void) {
 	struct settings *s;
 	const int strmaxlen = 1024;
 	long l;
+	char c;
 
 	s = malloc(sizeof(struct settings));
 	s->infile  = malloc(sizeof(char)*(strmaxlen+1));
@@ -93,6 +95,12 @@ struct settings *read_settings(void) {
 	printf("Axis of camera rotation: ");
 	scanf("%lf %lf %lf", s->rotate_axis, s->rotate_axis+1, s->rotate_axis+2);
 	printf("(%lf, %lf, %lf)\n", s->rotate_axis[0], s->rotate_axis[1], s->rotate_axis[2]);
+
+	printf("Draw bounding box [y/n]: ");
+	scanf("%c", &c);
+	printf("(%c)\n", c);
+	if (c == 'y') s->draw_bounds = 1;
+	else s->draw_bounds = 0;
 
 	return s;
 }
