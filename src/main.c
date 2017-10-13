@@ -261,6 +261,9 @@ int main(int argc, char *argv[]) {
 
 	camera_init(set->height, set->width, set->visang);
 
+	/* Determine SOV extents (for the user's convenience) */
+	camera_get_extents(s);
+
 	/* Find maximum intensity */
 	find_max_intensity(s, set);
 	

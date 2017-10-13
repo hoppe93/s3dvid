@@ -151,3 +151,41 @@ double **camera_generate(s3d_t *s) {
 	return camera_image;
 }
 
+void camera_get_extents(s3d_t *s) {
+	size_t i, j, k;
+	double dx = (s->xmax-s->xmin)/(s->pixels-1),
+		   dy = (s->ymax-s->ymin)/(s->pixels-1),
+		   dz = (s->zmax-s->zmin)/(s->pixels-1),
+		   xmin, ymin, zmin, xmax, ymax, zmax,
+		   idx, jdy, kdz, x, y, z;
+	
+	xmin = NAN, xmax = NAN;
+	ymin = NAN, ymax = NAN;
+	zmin = NAN, zmax = NAN;
+
+	for (i=0, idx=0; i < s->pixels; i++, idx+=dx) {
+		for (j=0, jdy=0; j < s->pixels; j++, jdy+=dy) {
+			for (k=0, kdz=0; k < s->pixels; k++, kdz+=dz) {
+				if (s->data[i][j][k] == 0) continue;
+
+				x = s->xmin + idx;
+				y = s->ymin + jdy;
+				z = s->zmin + kdz;
+
+					 if (isnan(xmin) || x < xmin) xmin = x;
+				else if (isnan(xmax) || x > xmax) xmax = x;
+					 if (isnan(ymin) || y < ymin) ymin = y;
+				else if (isnan(ymax) || y > ymax) ymax = y;
+					 if (isnan(zmin) || z < zmin) zmin = z;
+				else if (isnan(zmax) || z > zmax) zmax = z;
+			}
+		}
+	}
+
+	printf("-------------------------------\n");
+	printf("SURFACE-OF-VISIBILITY EXTENTS\n\n");
+	printf("  xmin = %2.3f,  xmax = %2.3f\n", xmin, xmax);
+	printf("  ymin = %2.3f,  ymax = %2.3f\n", ymin, ymax);
+	printf("  zmin = %2.3f,  zmax = %2.3f\n", zmin, zmax);
+	printf("-------------------------------\n\n");
+}

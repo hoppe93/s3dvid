@@ -9,5 +9,6 @@ void camera_destroy_image(void);
 void camera_new_image(void);
 void camera_clear_image(void);
 double **camera_generate(s3d_t*);
+void camera_get_extents(s3d_t*);
 
 #endif/*_CAMERA_H*/
