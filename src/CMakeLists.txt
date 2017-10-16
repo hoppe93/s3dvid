@@ -10,6 +10,7 @@ option(USE_HDF5 "Link in support for HDF5" OFF)
 option(USE_MATLAB "Link in support for MATLAB *.mat files" ON)
 
 set(main
+	"${PROJECT_SOURCE_DIR}/src/axes.c"
 	"${PROJECT_SOURCE_DIR}/src/camera.c"
 	"${PROJECT_SOURCE_DIR}/src/main.c"
 	"${PROJECT_SOURCE_DIR}/src/png.c"

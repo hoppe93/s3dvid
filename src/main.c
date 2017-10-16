@@ -96,12 +96,6 @@ struct settings *read_settings(void) {
 	scanf("%lf %lf %lf", s->rotate_axis, s->rotate_axis+1, s->rotate_axis+2);
 	printf("(%lf, %lf, %lf)\n", s->rotate_axis[0], s->rotate_axis[1], s->rotate_axis[2]);
 
-	printf("Draw bounding box [y/n]: ");
-	scanf("%c", &c);
-	printf("(%c)\n", c);
-	if (c == 'y') s->draw_bounds = 1;
-	else s->draw_bounds = 0;
-
 	return s;
 }
 
@@ -189,7 +183,6 @@ void generate_frames(
 	double avg = 0.0;
 	double loc[3], dir[3];
 	char *outname = malloc(sizeof(char)*mlen);
-		 //*outnamed = malloc(sizeof(char)*mlen);
 
 	/* Compute filename offset */
 	for (j = 0; j < (size_t)tn; j++)
@@ -214,9 +207,7 @@ void generate_frames(
 		avg += toc();
 
 		snprintf(outname, mlen, "%s%zu.png", set->outfile, offset+j);
-		//snprintf(outnamed, mlen, "%s%zu.dat", set->outfile, offset+j);
 		saveimg(img, set->height, set->width, outname);
-		//write_img(img, set->height, set->width, outnamed);
 	}
 
 	printf("Average time per frame on thread #%d: %.3fms\n", tn, avg*1e3/((double)anglecount[tn]));

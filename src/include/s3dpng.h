@@ -1,6 +1,7 @@
 #ifndef _S3DPNG_H
 #define _S3DPNG_H
 
+#include <stdlib.h>
 #include <stdint.h>
 
 typedef struct {
