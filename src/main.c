@@ -21,6 +21,7 @@ struct settings {
 	double rotate_axis[3];
 	char *infile, *outfile;
 	int draw_bounds;
+	double threshold;
 };
 
 struct timespec ticclock;
@@ -46,7 +47,6 @@ struct settings *read_settings(void) {
 	struct settings *s;
 	const int strmaxlen = 1024;
 	long l;
-	char c;
 
 	s = malloc(sizeof(struct settings));
 	s->infile  = malloc(sizeof(char)*(strmaxlen+1));
@@ -95,6 +95,10 @@ struct settings *read_settings(void) {
 	printf("Axis of camera rotation: ");
 	scanf("%lf %lf %lf", s->rotate_axis, s->rotate_axis+1, s->rotate_axis+2);
 	printf("(%lf, %lf, %lf)\n", s->rotate_axis[0], s->rotate_axis[1], s->rotate_axis[2]);
+
+	printf("Intensity threshold: ");
+	scanf("%lf", &s->threshold);
+	printf("(%lf)\n", s->threshold);
 
 	return s;
 }
@@ -151,7 +155,7 @@ void find_max_intensity(s3d_t *s, struct settings *set) {
 		exit(EXIT_FAILURE);
 	}
 
-	set_png_threshold(mx);
+	set_png_threshold(mx * set->threshold);
 }
 
 void write_img(double **img, size_t height, size_t width, char *name) {

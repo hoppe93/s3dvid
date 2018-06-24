@@ -45,6 +45,8 @@ bitmap_t *img2bitmap(double **img, size_t width, size_t height) {
 		for (j = 0; j < (long long signed int)height; j++, index++) {
 			gmi = (img[i][j]/bitmap_threshold * (GERIMAP_COLORS-1));
 			gmil = floor(gmi);
+			if (gmil >= GERIMAP_COLORS) gmil = GERIMAP_COLORS-1;
+
 			if (gmil >= GERIMAP_COLORS-1) {
 				bmp->pixels[index].red   = GERIMAP[GERIMAP_COLORS-1][0];
 				bmp->pixels[index].green = GERIMAP[GERIMAP_COLORS-1][1];
